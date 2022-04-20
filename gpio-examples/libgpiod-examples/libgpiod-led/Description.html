@@ -1,0 +1,38 @@
+<HTML>
+    <HEAD>
+      <TITLE>Description.html</TITLE>
+    </HEAD>
+    <BODY style="font-family: Arial">
+    
+    <h1>libgpiod output example</h1><hr>
+    <p> This is the sample code to blink LED0(GPIO5-19) RZG2E RevC using libgpiod API </p>
+    
+    <h2>Build</h2><hr>
+    <p>To use libgpiod in RZ-G, in yocto, add the recipe to image, this can be done in local.conf with
+    <pre style="background-color: #F6F8FA">
+    IMAGE_INSTALL_append = “ libgpiod libgpiod-tools”
+    </pre>
+    You must install a Yocto SDK that contains the libgpiod library for RZG2E.
+    <pre style="background-color: #F6F8FA">
+    $ source /opt/poky/2.4.3/environment-setup-aarch64-poky-linux
+    $ make
+    </pre>
+    NOTE: GP5_19 is defined as a GPIO LED0 in Device Tree and it is used by kernel. So to use LED0 to either remove it from the Device Tree and reprogram the board, or
+    you can remove it from device tree in uboot using fdt command. Below is the example using fdt
+    <pre>
+    => setenv gpioLED_1=fatload mmc 0:1 0x48080000 Image-ek874.bin; fatload mmc 0:1 0x48000000 Image-r8a774c0-ek874-revc-mipi-2.1.dtb
+    => setenv gpioLED_2=fdt addr 0x48000000 ; fdt rm /leds
+    => setenv gpioLED_3=booti 0x48080000 - 0x48000000
+    => setenv gpioLED_boot=run gpioLED_1 gpioLED_2 gpioLED_3
+    => setenv
+    => run gpioLED_boot
+    </pre>
+    </p>
+    
+    <h2>run</h2><hr>
+    <pre style="background-color: #F6F8FA">
+    $ ./libgpiod-led
+    </pre>
+        
+    </BODY>
+</HTML>
